@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ProductSchema {
+  name    String?
+  bank    Int
+  product Int      @id @default(autoincrement())
+  type    Int
+  status  Boolean
+  updated DateTime @default(now())
+}
+
+model HiveSchema {
+  walletid      String     @unique
+  walletkey     String
+  timestamp     DateTime   @default(now())
+  ref           String
+  hash          String
+  amount        Float
+  body          String?
+  signatue      String     @unique @default(uuid())
+  owner         UserSchema @relation(fields: [userSchemaKey], references: [key])
+  userSchemaKey String
+}
+
+model VertixSchema {
+  walletid          String
+  transaction_id    String   @unique @default(uuid())
+  transaction_no    String
+  transaction_count Int
+  timestamp         DateTime @default(now())
+  ref               String
+  edge_in           String?
+  edge_out          String?
+  hash              String
+  amount            Float
+  body              String?
+}
+
+model UserSchema {
+  reg_date   DateTime     @default(now())
+  key        String       @unique
+  firstname  String
+  lastname   String?      @default("No Last Name")
+  email      String
+  contact    String?
+  password   String
+  role       String       @default("ROOT")
+  status     String
+  wallets    String?
+  HiveSchema HiveSchema[]
+}
