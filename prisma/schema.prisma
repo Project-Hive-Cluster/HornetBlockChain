@@ -17,6 +17,7 @@ model ProductSchema {
 }
 
 model HiveSchema {
+  id            Int        @id @unique @default(autoincrement())
   walletid      String     @unique
   walletkey     String
   timestamp     DateTime   @default(now())

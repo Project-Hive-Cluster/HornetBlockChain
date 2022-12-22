@@ -138,12 +138,12 @@ class BlockChain {
         let temp_walletid = pre_block.walletid
         if (temp_walletid.toString() === "0000000000000000") {
           walletid = "1778500000000001"
-          refBlock = pre_block.ref
+          refBlock = pre_block.hash
         } else {
           temp_walletid = parseInt(temp_walletid)
           temp_walletid = temp_walletid + 1
           walletid = temp_walletid.toString()
-          refBlock = pre_block.ref
+          refBlock = pre_block.hash
         }
       } catch (e) {
         return "Error creating walletid" + e
@@ -209,6 +209,12 @@ class BlockChain {
     } catch (err) {
       console.error("Creat Hash Function error: " + err)
     }
+  }
+
+  verifyHash = () => {
+    const _blocks = prisma.hiveSchema.findMany()
+    console.log("object :>> ", _blocks)
+    return _blocks
   }
 
   sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))

@@ -23,5 +23,10 @@ router.post("/create", async (req, res) => {
   console.log("output :>> ", output)
   res.send(output)
 })
+router.get("/test", async (req, res) => {
+  const output = await blockChain.verifyHash()
+  console.log("output :>> ", output)
+  res.send(output)
+})
 
 module.exports = router
