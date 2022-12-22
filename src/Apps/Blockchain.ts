@@ -154,9 +154,11 @@ class BlockChain {
 
       try {
         const hashData = JSON.stringify(
-          pre_block.walletid + pre_block.ref,
-          pre_block.hash + pre_block.timestamp,
-          pre_block.body
+          pre_block.walletid +
+            pre_block.ref +
+            pre_block.hash +
+            pre_block.timestamp +
+            pre_block.body
         )
         _Hash = await crypto
           .createHash("sha256")
@@ -211,11 +213,20 @@ class BlockChain {
     }
   }
 
-  verifyHash = () => {
-    const _blocks = prisma.hiveSchema.findMany()
-    console.log("object :>> ", _blocks)
-    return _blocks
-  }
+  // verifyHash = async () => {
+  //   const _blocks = await prisma.hiveSchema.findMany()
+  //   _blocks.map(({ ref, hash, walletid, timestamp, body }:any) => {
+  //     const hashData = JSON.stringify(walletid + ref + hash + timestamp + body)
+
+  //     _Hash = await crypto
+  //       .createHash("sha256")
+  //       .update(hashData, "utf8")
+  //       .digest("hex")
+  //   })
+
+  //   console.log("object :>> ", _blocks)
+  //   return _blocks
+  // }
 
   sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 }
