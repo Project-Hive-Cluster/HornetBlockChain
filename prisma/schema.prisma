@@ -9,10 +9,10 @@ datasource db {
 
 model ProductSchema {
   name    String?
-  bank    Int
+  bank    String
   product Int      @id @default(autoincrement())
-  type    Int
-  status  Boolean
+  type    String
+  status  String
   updated DateTime @default(now())
 }
 
