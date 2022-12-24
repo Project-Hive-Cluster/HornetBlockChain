@@ -5,9 +5,14 @@ const blockChain = new BlockChain()
 
 /* GET users listing. */
 router.get("/initialize", async (req, res) => {
-  const output = await blockChain.initialize()
-  console.log("output :>> ", output)
-  res.send(output)
+  try {
+    const output = await blockChain.initialize()
+    res.send(output)
+  } catch (err) {
+     console.log("Error in initialize api :>> ", err)
+    const errorMsg:string = JSON.stringify(err)
+    res.status(404).json({ "Error Massage" : errorMsg })
+    }
 })
 router.post("/create", async (req, res) => {
   const { firstname, lastname, email, contact, password, body } = req.body

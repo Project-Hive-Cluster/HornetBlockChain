@@ -1,3 +1,4 @@
+
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 import crypto from "crypto"
@@ -71,11 +72,29 @@ class BlockChain {
         } else {
           return { Error: "PrivateKey or PrivateKey missing" }
         }
-      } catch (err) {
-        console.error(err)
+      } catch (err: any) {
+        console.error("Error updating Blockchain initialize: ", err)
+        const error = new Error(err)
+        let propertyNames: any = Object.getOwnPropertyNames(error)
+        let descriptor: any
+        for (let property, i = 0, len = propertyNames.length; i < len; ++i) {
+          property = propertyNames[i]
+          descriptor = Object.getOwnPropertyDescriptor(error, property)
+          console.log(property, descriptor)
+        }
+        return  JSON.stringify(descriptor)
       }
-    } catch (err) {
-      console.error(err)
+    } catch (err: any) {
+      console.error("Error in Blockchain Initialize: ", err)
+     const error = new Error(err)
+        let propertyNames: any = Object.getOwnPropertyNames(error)
+        let descriptor: any
+        for (let property, i = 0, len = propertyNames.length; i < len; ++i) {
+          property = propertyNames[i]
+          descriptor = Object.getOwnPropertyDescriptor(error, property)
+          console.log(property, descriptor)
+        }
+        return  JSON.stringify(descriptor)
     }
   }
   create = async ({
@@ -227,6 +246,7 @@ class BlockChain {
   //   console.log("object :>> ", _blocks)
   //   return _blocks
   // }
+
 
   sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 }
