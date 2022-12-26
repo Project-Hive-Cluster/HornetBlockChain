@@ -1,5 +1,5 @@
-import express from "express"
-import path from "path"
+import express, { application } from "express"
+
 import cookieParser from "cookie-parser"
 import logger from "morgan"
 import cors from "cors"
@@ -24,15 +24,14 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 
-
-// app.use("/", walletRouter)
+// Routes
+// app.use("/wallet", walletRouter)
 // app.use("/auth", usersRouter)
 app.use("/blockchain", blockChainRouter)
 // app.use("/vartix", vartixRouter)
 
-
-app.get("/*", async (res:any) => {
-  res.send(404,{ Error: "Invalid Address" })
+app.get("/*", (res: any) => {
+  res.status(404).json({ Error: "Invalid Address" })
 })
 
 export default app

@@ -1,4 +1,3 @@
-
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 import crypto from "crypto"
@@ -12,7 +11,7 @@ class BlockChain {
       let privateKey: any = undefined
 
       // Calling crypto.generateKeyPair() method
-      await crypto.generateKeyPair(
+      crypto.generateKeyPair(
         "ec",
         {
           namedCurve: "secp256k1", // Options
@@ -25,17 +24,18 @@ class BlockChain {
             format: "der",
           },
         },
-        async (err, _publicKey, _privateKey) => {
+        (err, _publicKey, _privateKey) => {
           // Callback function
           if (!err) {
-            publicKey = await _publicKey.toString("hex")
-            privateKey = await _privateKey.toString("hex")
+            publicKey = _publicKey.toString("hex")
+            privateKey = _privateKey.toString("hex")
           } else {
             console.log("Errr in Key Pair: ", err)
           }
         }
       )
-      await this.sleep(3000)
+      await prisma.hiveSchema.deleteMany()
+
       let genesisBlock: object = {}
       const _body = JSON.stringify({
         Titel: "Genesis",
@@ -82,19 +82,19 @@ class BlockChain {
           descriptor = Object.getOwnPropertyDescriptor(error, property)
           console.log(property, descriptor)
         }
-        return  JSON.stringify(descriptor)
+        return JSON.stringify(descriptor)
       }
     } catch (err: any) {
       console.error("Error in Blockchain Initialize: ", err)
-     const error = new Error(err)
-        let propertyNames: any = Object.getOwnPropertyNames(error)
-        let descriptor: any
-        for (let property, i = 0, len = propertyNames.length; i < len; ++i) {
-          property = propertyNames[i]
-          descriptor = Object.getOwnPropertyDescriptor(error, property)
-          console.log(property, descriptor)
-        }
-        return  JSON.stringify(descriptor)
+      const error = new Error(err)
+      let propertyNames: any = Object.getOwnPropertyNames(error)
+      let descriptor: any
+      for (let property, i = 0, len = propertyNames.length; i < len; ++i) {
+        property = propertyNames[i]
+        descriptor = Object.getOwnPropertyDescriptor(error, property)
+        console.log(property, descriptor)
+      }
+      return JSON.stringify(descriptor)
     }
   }
   create = async ({
@@ -116,7 +116,7 @@ class BlockChain {
       let refBlock: any = undefined
 
       // Calling crypto.generateKeyPair() method
-      await crypto.generateKeyPair(
+      crypto.generateKeyPair(
         "ec",
         {
           namedCurve: "secp256k1", // Options
@@ -129,11 +129,11 @@ class BlockChain {
             format: "der",
           },
         },
-        async (err, _publicKey, _privateKey) => {
+        (err, _publicKey, _privateKey) => {
           // Callback function
           if (!err) {
-            publicKey = await _publicKey.toString("hex")
-            privateKey = await _privateKey.toString("hex")
+            publicKey = _publicKey.toString("hex")
+            privateKey = _privateKey.toString("hex")
           } else {
             console.log("Errr in Key Pair: ", err)
           }
@@ -141,7 +141,7 @@ class BlockChain {
       )
 
       /* Key took time something JS not giving there for we make it wait */
-      await this.sleep(1000) //3000ms = 3 seconds
+      // await this.sleep(1000) //3000ms = 3 seconds
 
       let Block: object = {}
 
@@ -152,7 +152,6 @@ class BlockChain {
             walletid: "desc",
           },
         })
-        await this.sleep(1000)
 
         let temp_walletid = pre_block.walletid
         if (temp_walletid.toString() === "0000000000000000") {
@@ -175,7 +174,6 @@ class BlockChain {
         const hashData = JSON.stringify(
           pre_block.walletid +
             pre_block.ref +
-            pre_block.hash +
             pre_block.timestamp +
             pre_block.body
         )
@@ -192,7 +190,6 @@ class BlockChain {
         return "Error creating Hash: " + e
       }
       /* Key took time something JS not giving there for we make it wait */
-      await this.sleep(1000) //3000ms = 3 seconds
 
       try {
         if (privateKey || privateKey) {
@@ -232,21 +229,73 @@ class BlockChain {
     }
   }
 
-  // verifyHash = async () => {
-  //   const _blocks = await prisma.hiveSchema.findMany()
-  //   _blocks.map(({ ref, hash, walletid, timestamp, body }:any) => {
-  //     const hashData = JSON.stringify(walletid + ref + hash + timestamp + body)
+  validateChain = async () => {
+    const chain = await prisma.hiveSchema.findMany()
 
-  //     _Hash = await crypto
-  //       .createHash("sha256")
-  //       .update(hashData, "utf8")
-  //       .digest("hex")
-  //   })
+    for (let i = 1; i < chain.length; i++) {
+      const currentBlock = chain[i]
+      const previousBlock = chain[i - 1]
 
-  //   console.log("object :>> ", _blocks)
-  //   return _blocks
-  // }
+      // Verify that the previous block hash stored in the current block
+      // matches the actual hash of the previous block
+      if (currentBlock.ref !== previousBlock.hash) {
+        return "Chain is invalid: Current block and reference block do not match"
+      }
 
+      const hashData = JSON.stringify(
+        currentBlock.walletid +
+          currentBlock.ref +
+          currentBlock.timestamp +
+          currentBlock.body
+      )
+
+      const calculateBlockHash = await crypto
+        .createHash("sha256")
+        .update(hashData, "utf8")
+        .digest("hex")
+      // Verify that the current block has not been tampered with
+      // by checking the hash of the block itself
+
+      if (currentBlock.hash !== calculateBlockHash) {
+        console.log(currentBlock.id)
+        console.log(currentBlock.hash, " _><_ ", calculateBlockHash)
+        return "Chain is invalid: Current block Hash do not match"
+      }
+      console.log(currentBlock)
+    }
+
+    return true
+
+    // let blockchain_arr: object[] = [_blocks]
+
+    // _blocks.map(async ({ ref, hash, walletid, timestamp, body }: any) => {
+    //   blockChain.push({
+    //     "Previous Block": ref,
+    //     "Current Block": hash,
+    //     wid: walletid,
+    //     time: timestamp,
+    //     body: body,
+    //   })
+
+    // const hashData = JSON.stringify(walletid + ref + hash + timestamp + body)
+    // if (walletid === "0000000000000000") {
+    //   previous_Hash = await crypto
+    //     .createHash("sha256")
+    //     .update(hashData, "utf8")
+    //     .digest("hex")
+    // } else if (previous_Hash === hash) {
+    //   previous_Hash = await crypto
+    //     .createHash("sha256")
+    //     .update(hashData, "utf8")
+    //     .digest("hex")
+    // } else {
+    //   return "Block Invalid"
+    // }
+    // })
+
+    // console.log("object :>> ", _blocks)
+    // return _blocks
+  }
 
   sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 }
