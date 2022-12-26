@@ -3,38 +3,16 @@ const prisma = new PrismaClient()
 import crypto from "crypto"
 
 class BlockChain {
-  constructor() {}
+  constructor() { }
 
   initialize = async () => {
     try {
-      let publicKey: any = undefined
-      let privateKey: any = undefined
 
-      // Calling crypto.generateKeyPair() method
-      crypto.generateKeyPair(
-        "ec",
-        {
-          namedCurve: "secp256k1", // Options
-          publicKeyEncoding: {
-            type: "spki",
-            format: "der",
-          },
-          privateKeyEncoding: {
-            type: "pkcs8",
-            format: "der",
-          },
-        },
-        (err, _publicKey, _privateKey) => {
-          // Callback function
-          if (!err) {
-            publicKey = _publicKey.toString("hex")
-            privateKey = _privateKey.toString("hex")
-          } else {
-            console.log("Errr in Key Pair: ", err)
-          }
-        }
-      )
-      await prisma.hiveSchema.deleteMany()
+ const [publicKey, privateKey] = await this.generateKeyPair()
+      // await prisma.hiveSchema.deleteMany()
+
+      console.log('====privateKey=> ',privateKey);
+      console.log('====publicKey=> ',publicKey);
 
       let genesisBlock: object = {}
       const _body = JSON.stringify({
@@ -48,8 +26,8 @@ class BlockChain {
             data: {
               walletid: "0000000000000000",
               walletkey: privateKey,
-              ref: "this_root",
-              hash: "root",
+              ref: "genesis",
+              hash: "genesis block",
               body: _body,
               amount: 0,
               signatue: "Invalid signature",
@@ -57,7 +35,7 @@ class BlockChain {
                 create: {
                   key: publicKey,
                   firstname: "Haxrei",
-                  lastname: "Root",
+                  lastname: "Genesis",
                   email: "hivecluster@haxrei.com",
                   contact: "+8801611774234",
                   password: "null",
@@ -97,6 +75,11 @@ class BlockChain {
       return JSON.stringify(descriptor)
     }
   }
+
+
+  /*  Block Ganarator*/
+
+
   create = async ({
     _firstname,
     _lastname,
@@ -107,38 +90,46 @@ class BlockChain {
   }: any) => {
     try {
       /*  Initialize Depanded variable */
-
+      const date = new Date()
+      const timestamp: any = date.toString() 
+      /* Date is vidal as it need to add in the hash*/
       let walletid: any = undefined
       let pre_block: any = undefined
       let _Hash: any = undefined
-      let publicKey: any = undefined
-      let privateKey: any = undefined
+
       let refBlock: any = undefined
 
-      // Calling crypto.generateKeyPair() method
-      crypto.generateKeyPair(
-        "ec",
-        {
-          namedCurve: "secp256k1", // Options
-          publicKeyEncoding: {
-            type: "spki",
-            format: "der",
-          },
-          privateKeyEncoding: {
-            type: "pkcs8",
-            format: "der",
-          },
-        },
-        (err, _publicKey, _privateKey) => {
-          // Callback function
-          if (!err) {
-            publicKey = _publicKey.toString("hex")
-            privateKey = _privateKey.toString("hex")
-          } else {
-            console.log("Errr in Key Pair: ", err)
-          }
-        }
-      )
+      /*
+      In TypeScript, you can use the crypto module to generate key pairs for use with public-key cryptography.
+
+The crypto module provides a number of functions for generating and manipulating key pairs, including generateKeyPair(), which generates a public-private key pair. Here's an example of how you might use this function:
+      */
+
+      // const options = {
+      //   modulusLength: 4096,
+      //   publicKeyEncoding: {
+      //     type: 'spki',
+      //     format: 'pem'
+      //   },
+      //   privateKeyEncoding: {
+      //     type: 'pkcs8',
+      //     format: 'pem'
+      //   }
+      // };
+
+      // crypto.generateKeyPair('rsa', options, (err, _publicKey, _privateKey) => {
+      //   if (err) {
+      //     console.log("Error in Key Pair: ", err)
+      //   } else {
+      //     publicKey = _publicKey
+      //     privateKey = _privateKey
+      //     console.log(publicKey);
+      //     console.log(privateKey);
+      //   }
+      // })
+
+      const [publicKey, privateKey] = await this.generateKeyPair()
+
 
       /* Key took time something JS not giving there for we make it wait */
       // await this.sleep(1000) //3000ms = 3 seconds
@@ -172,20 +163,32 @@ class BlockChain {
 
       try {
         const hashData = JSON.stringify(
-          pre_block.walletid +
-            pre_block.ref +
-            pre_block.timestamp +
-            pre_block.body
+          walletid +
+          pre_block.ref +
+          timestamp +
+          _body
         )
         _Hash = await crypto
           .createHash("sha256")
-          .update(hashData, "utf8")
+          .update(hashData)
           .digest("hex")
 
         _password = crypto
           .createHash("sha256")
-          .update(_password, "utf8")
+          .update(_password)
           .digest("hex")
+        
+        /*
+        This code generates a SHA-256 hash of the string 'hashData', and encodes the result as a hexadecimal string.
+
+You can use different hash algorithms by specifying a different algorithm name as the first argument to createHash(). For example, you can use 'sha1' to generate a SHA-1 hash, or 'md5' to generate an MD5 hash.
+
+You can also use the update() and digest() functions to hash data in chunks, rather than all at once. This can be useful if you are working with very large datasets that cannot fit in memory all at once.
+
+I hope this helps give you an idea of how to use the crypto module to generate hashes in TypeScript! Let me know if you have any questions.
+        
+        */
+        
       } catch (e) {
         return "Error creating Hash: " + e
       }
@@ -197,6 +200,7 @@ class BlockChain {
             data: {
               walletid: walletid,
               walletkey: privateKey,
+              timestamp:timestamp,
               ref: refBlock,
               hash: _Hash,
               body: _body,
@@ -244,9 +248,9 @@ class BlockChain {
 
       const hashData = JSON.stringify(
         currentBlock.walletid +
-          currentBlock.ref +
-          currentBlock.timestamp +
-          currentBlock.body
+        currentBlock.ref +
+        currentBlock.timestamp +
+        currentBlock.body
       )
 
       const calculateBlockHash = await crypto
@@ -296,6 +300,31 @@ class BlockChain {
     // console.log("object :>> ", _blocks)
     // return _blocks
   }
+
+
+  generateKeyPair(): Promise<[any, any]> {
+  return new Promise((resolve, reject) => {
+    const options = {
+      modulusLength: 4096,
+      publicKeyEncoding: {
+        type: 'spki',
+        format: 'pem'
+      },
+      privateKeyEncoding: {
+        type: 'pkcs8',
+        format: 'pem'
+      }
+    };
+
+    crypto.generateKeyPair('rsa', options, (err, publicKey, privateKey) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve([publicKey, privateKey]);
+      }
+    });
+  });
+}
 
   sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 }

@@ -54,6 +54,7 @@ model UserSchema {
   password   String
   role       String       @default("ROOT")
   status     String
+   timestamp         DateTime @default(now())
   wallets    String?
   HiveSchema HiveSchema[]
 }

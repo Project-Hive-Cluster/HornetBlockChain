@@ -1,0 +1,200 @@
+import { PrismaClient } from "@prisma/client"
+const prisma = new PrismaClient()
+import crypto from "crypto"
+
+class Vartix {
+  constructor() {}
+
+ 
+  make = async ({
+    _from,
+    _to,
+    _amount            ,
+    _body = undefined,
+  }: any) => {
+    try {
+      /*  Initialize Depanded variable */
+
+      let walletid: any = undefined
+      let temp_block: any = undefined
+      let to_temp_block: any = undefined
+      let from_temp_block: any = undefined
+      let privateKey: any = undefined
+      let refBlock: any = undefined
+
+      
+
+      /* Key took time something JS not giving there for we make it wait */
+      // await this.sleep(1000) //3000ms = 3 seconds
+
+      let Block: object = {}
+
+      try {
+        to_temp_block = await prisma.vertixSchema.findFirst({ where: {
+          walletid: _to
+        },
+           orderBy: {
+            walletid: "desc",
+          },
+        })
+
+        from_temp_block = await prisma.vertixSchema.findFirst({ where: {
+          walletid: _from
+        },
+           orderBy: {
+            walletid: "desc",
+          },
+        })
+        
+
+
+
+
+        let temp_walletid = pre_block.walletid
+        if (temp_walletid.toString() === "0000000000000000") {
+          walletid = "1778500000000001"
+          refBlock = pre_block.hash
+        } else {
+          temp_walletid = parseInt(temp_walletid)
+          temp_walletid = temp_walletid + 1
+          walletid = temp_walletid.toString()
+          refBlock = pre_block.hash
+        }
+      } catch (e) {
+        return "Error creating walletid" + e
+      }
+
+      /** Hashing Previous Block
+       */
+
+      try {
+        const hashData = JSON.stringify(
+          pre_block.walletid +
+            pre_block.ref +
+            pre_block.timestamp +
+            pre_block.body
+        )
+        _Hash = await crypto
+          .createHash("sha256")
+          .update(hashData, "utf8")
+          .digest("hex")
+
+        _password = crypto
+          .createHash("sha256")
+          .update(_password, "utf8")
+          .digest("hex")
+      } catch (e) {
+        return "Error creating Hash: " + e
+      }
+      /* Key took time something JS not giving there for we make it wait */
+
+      try {
+        if (privateKey || privateKey) {
+          Block = await prisma.hiveSchema.create({
+            data: {
+              walletid: walletid,
+              walletkey: privateKey,
+              ref: refBlock,
+              hash: _Hash,
+              body: _body,
+              amount: 0,
+              signatue: undefined,
+              owner: {
+                create: {
+                  key: publicKey,
+                  firstname: _firstname,
+                  lastname: _lastname,
+                  email: _email,
+                  contact: _contact,
+                  password: _password,
+                  status: "A",
+                  wallets: walletid,
+                },
+              },
+            },
+          })
+          await prisma.$disconnect()
+          return Block
+        } else {
+          return { Error: "PrivateKey or PrivateKey missing" }
+        }
+      } catch (err) {
+        console.error(err)
+      }
+    } catch (err) {
+      console.error("Creat Hash Function error: " + err)
+    }
+  }
+
+  validateChain = async () => {
+    const chain = await prisma.hiveSchema.findMany()
+
+    for (let i = 1; i < chain.length; i++) {
+      const currentBlock = chain[i]
+      const previousBlock = chain[i - 1]
+
+      // Verify that the previous block hash stored in the current block
+      // matches the actual hash of the previous block
+      if (currentBlock.ref !== previousBlock.hash) {
+        return "Chain is invalid: Current block and reference block do not match"
+      }
+
+      const hashData = JSON.stringify(
+        currentBlock.walletid +
+          currentBlock.ref +
+          currentBlock.timestamp +
+          currentBlock.body
+      )
+
+      const calculateBlockHash = await crypto
+        .createHash("sha256")
+        .update(hashData, "utf8")
+        .digest("hex")
+      // Verify that the current block has not been tampered with
+      // by checking the hash of the block itself
+
+      if (currentBlock.hash !== calculateBlockHash) {
+        console.log(currentBlock.id)
+        console.log(currentBlock.hash, " _><_ ", calculateBlockHash)
+        return "Chain is invalid: Current block Hash do not match"
+      }
+      console.log(currentBlock)
+    }
+
+    return true
+
+    // let blockchain_arr: object[] = [_blocks]
+
+    // _blocks.map(async ({ ref, hash, walletid, timestamp, body }: any) => {
+    //   blockChain.push({
+    //     "Previous Block": ref,
+    //     "Current Block": hash,
+    //     wid: walletid,
+    //     time: timestamp,
+    //     body: body,
+    //   })
+
+    // const hashData = JSON.stringify(walletid + ref + hash + timestamp + body)
+    // if (walletid === "0000000000000000") {
+    //   previous_Hash = await crypto
+    //     .createHash("sha256")
+    //     .update(hashData, "utf8")
+    //     .digest("hex")
+    // } else if (previous_Hash === hash) {
+    //   previous_Hash = await crypto
+    //     .createHash("sha256")
+    //     .update(hashData, "utf8")
+    //     .digest("hex")
+    // } else {
+    //   return "Block Invalid"
+    // }
+    // })
+
+    // console.log("object :>> ", _blocks)
+    // return _blocks
+  }
+
+  sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+export default BlockChain
