@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "HiveSchema" ALTER COLUMN "timestamp" DROP DEFAULT,
+ALTER COLUMN "timestamp" SET DATA TYPE TEXT;

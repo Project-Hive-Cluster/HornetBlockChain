@@ -20,7 +20,7 @@ model HiveSchema {
   id            Int        @id @unique @default(autoincrement())
   walletid      String     @unique
   walletkey     String
-  timestamp     DateTime   @default(now())
+  timestamp     String     @default("Null")
   ref           String
   hash          String
   amount        Float
@@ -28,14 +28,15 @@ model HiveSchema {
   signatue      String     @unique @default(uuid())
   owner         UserSchema @relation(fields: [userSchemaKey], references: [key])
   userSchemaKey String
+  updateat      DateTime   @default(now())
 }
 
 model VertixSchema {
   walletid          String
-  transaction_id    String   @unique @default(uuid())
+  transaction_id    String  @unique @default(uuid())
   transaction_no    String
   transaction_count Int
-  timestamp         DateTime @default(now())
+  timestamp         String  @default("Null")
   ref               String
   edge_in           String?
   edge_out          String?
@@ -54,7 +55,6 @@ model UserSchema {
   password   String
   role       String       @default("ROOT")
   status     String
-   timestamp         DateTime @default(now())
   wallets    String?
   HiveSchema HiveSchema[]
 }
