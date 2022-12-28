@@ -7,6 +7,7 @@
     "dev": "nodemon ./bin/www.ts",
     "mig": "prisma migrate dev",
     "reset": "prisma migrate reset",
+    "sync": "prisma generate",
     "ps": "prisma studio"
   },
   "dependencies": {

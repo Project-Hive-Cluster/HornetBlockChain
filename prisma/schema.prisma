@@ -41,7 +41,8 @@ model VertixSchema {
   edge_in           String?
   edge_out          String?
   hash              String
-  amount            Float
+  debit             Float   @default(0)
+  credit            Float   @default(0)
   body              String?
 }
 
