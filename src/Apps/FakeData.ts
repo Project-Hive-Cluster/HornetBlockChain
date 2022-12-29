@@ -21,11 +21,10 @@ export const dataGen = async (count: number) => {
           Addr: faker.address.city(),
         }),
       })
+      console.log('Success', count-i)
     }
-    return await prisma.hiveSchema.findMany({
-      select: { id: true, walletid: true },
-    })
-  } catch (err) {
+    return "Success"
+  } catch (err) { 
     console.log("Error Creating fake data :>> ", err)
     return "Error Creating fake data : " + err
   }
