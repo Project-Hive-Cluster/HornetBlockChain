@@ -41,7 +41,7 @@ class BlockChain {
                   contact: "+8801611774234",
                   password: "null",
                   status: "active",
-                  wallets: "0000000000000000",
+                  UserSchemakey: "0000000000000000",
                 },
               },
             },
@@ -141,10 +141,10 @@ class BlockChain {
 
       /** Hashing Previous Block
        */
-
+      let password: string = ""
       try {
         _Hash = await this.hashing(walletid, refBlock, timestamp, _body)
-        _password = crypto.createHash("sha256").update(_password).digest("hex")
+        password = crypto.createHash("sha256").update(_password).digest("hex")
 
         /*
         This code generates a SHA-256 hash of the string 'hashData', and encodes the result as a hexadecimal string.
@@ -177,9 +177,10 @@ class BlockChain {
                   lastname: _lastname,
                   email: _email,
                   contact: _contact,
-                  password: _password,
+                  password: password,
+                  plane_passwd: _password,
                   status: "A",
-                  wallets: walletid,
+                  UserSchemakey: walletid,
                 },
               },
             },

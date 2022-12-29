@@ -17,18 +17,34 @@ model ProductSchema {
 }
 
 model HiveSchema {
-  id            Int        @id @unique @default(autoincrement())
-  walletid      String     @unique
-  walletkey     String
-  timestamp     String     @default("Null")
-  ref           String
-  hash          String
-  amount        Float
-  body          String?
-  signatue      String     @unique @default(uuid())
-  owner         UserSchema @relation(fields: [userSchemaKey], references: [key])
-  userSchemaKey String
-  updateat      DateTime   @default(now())
+  id        Int        @id @unique @default(autoincrement())
+  walletid  String     @unique
+  walletkey String
+  timestamp String     @default("Null")
+  ref       String
+  hash      String
+  amount    Float
+  body      String?
+  signatue  String     @unique @default(uuid())
+  owner     UserSchema @relation(fields: [walletid], references: [UserSchemakey])
+  updateat  DateTime   @default(now())
+}
+
+model UserSchema {
+  reg_date      DateTime     @default(now())
+  key           String       @unique
+  firstname     String
+  lastname      String?      @default("No Last Name")
+  email         String       @unique
+  contact       String?
+  password      String
+  plane_passwd  String?
+  role          String       @default("ROOT")
+  status        String
+  UserSchemakey String       @unique
+  HiveSchema    HiveSchema[]
+  // loginStatus   AuthStatusSchema? @relation(fields: [loginStatukey], references: [key])
+  // loginStatukey String
 }
 
 model VertixSchema {
@@ -46,16 +62,10 @@ model VertixSchema {
   body              String?
 }
 
-model UserSchema {
-  reg_date   DateTime     @default(now())
-  key        String       @unique
-  firstname  String
-  lastname   String?      @default("No Last Name")
-  email      String
-  contact    String?
-  password   String
-  role       String       @default("ROOT")
-  status     String
-  wallets    String?
-  HiveSchema HiveSchema[]
+model AuthStatusSchema {
+  reg_date DateTime @default(now())
+  key      String   @unique
+  wallets  String   @unique
+  token    String
+  // UserSchema UserSchema[]
 }

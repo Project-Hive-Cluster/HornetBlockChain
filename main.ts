@@ -26,9 +26,9 @@ app.use(cookieParser())
 
 // Routes
 // app.use("/wallet", walletRouter)
-// app.use("/auth", usersRouter)
 app.use("/blockchain", blockChainRouter)
 app.use("/vartix", vartixRouter)
+// app.use("/auth", usersRouter)
 
 app.get("/*", (res: any) => {
   res.status(404).json({ Error: "Invalid Address" })

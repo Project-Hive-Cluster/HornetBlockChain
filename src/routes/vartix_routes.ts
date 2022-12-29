@@ -2,7 +2,7 @@ import express from "express"
 const router = express.Router()
 import Vartix from "../Apps/Vartix"
 const vartix = new Vartix()
-import { faketr } from "../Apps/FakeData"
+// import { dataGen } from "../Apps/FakeData"
 
 router.post("/load", async (req, res) => {
   try {
@@ -49,14 +49,14 @@ router.post("/statment", async (req, res) => {
   }
 })
 
-router.get("/faketr", async (req, res) => {
-  try {
-    const output = await faketr()
-    res.send({ data: output })
-  } catch (err) {
-    console.log("Ërror://", err)
-    res.send(err)
-  }
-})
+// router.get("/faketr", async (req, res) => {
+//   try {
+//     const output = await faketr()
+//     res.send({ data: output })
+//   } catch (err) {
+//     console.log("Ërror://", err)
+//     res.send(err)
+//   }
+// })
 
 module.exports = router
