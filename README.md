@@ -1,8 +1,9 @@
-﻿![](Aspose.Words.e54c5cc4-5505-4ca7-8cdd-0ca162e287d9.001.png)Hornet System
+﻿![](Aspose.Words.e54c5cc4-5505-4ca7-8cdd-0ca162e287d9.001.png)
 
-` `A Centralized Blockchain System that deliver REST API.
+## Hornet System 
+ A Centralized Blockchain System that deliver REST API.
 
-About
+# About
 
 A centralized blockchain is a type of blockchain that is controlled by a single entity or organization. In a centralized blockchain, there is a central authority that controls the addition of new blocks to the chain and the validation of transactions.
 
@@ -12,7 +13,7 @@ However, the centralization of a blockchain also means that it is more vulnerabl
 
 In contrast, decentralized blockchains such as Bitcoin and Ethereum rely on a distributed network of nodes to validate transactions and add new blocks to the chain, which makes them more resistant to censorship and tampering.
 
-Advantages
+# Advantages
 
 There are several advantages to using a centralized blockchain:
 
@@ -28,7 +29,7 @@ Reduced costs: A centralized blockchain can potentially have lower operating cos
 
 However, it's important to note that these advantages are balanced by the potential drawbacks of a centralized blockchain, such as the lack of decentralization and censorship resistance.
 
-Disadvantages
+# Disadvantages
 
 There are several disadvantages to using a centralized blockchain:
 
@@ -44,7 +45,7 @@ Reduced security: While a centralized blockchain may have stronger security meas
 
 In contrast, decentralized blockchains such as Bitcoin and Ethereum rely on a distributed network of nodes to validate transactions and add new blocks to the chain, which can provide increased security and decentralization.
 
-Requirements 
+# Requirements 
 
 - Nodejs 16
 - Postgres, MySQL, MariaDB
