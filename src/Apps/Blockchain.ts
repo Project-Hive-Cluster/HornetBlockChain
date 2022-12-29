@@ -13,7 +13,7 @@ class BlockChain {
       const [publicKey, privateKey] = await this.generateKeyPair()
       // console.log("====privateKey=> ", privateKey)
       // console.log("====publicKey=> ", publicKey)
-      const genisis: string = "0000000000000000"
+      const genisis: string = "0000000000000000" || " "
       let genesisBlock: object = {}
       const _body = JSON.stringify({
         Titel: "Genesis",
