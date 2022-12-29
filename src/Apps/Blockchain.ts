@@ -13,7 +13,7 @@ class BlockChain {
       const [publicKey, privateKey] = await this.generateKeyPair()
       // console.log("====privateKey=> ", privateKey)
       // console.log("====publicKey=> ", publicKey)
-
+      const genisis: string = "0000000000000000"
       let genesisBlock: object = {}
       const _body = JSON.stringify({
         Titel: "Genesis",
@@ -24,16 +24,10 @@ class BlockChain {
         if (privateKey || privateKey) {
           genesisBlock = await prisma.hiveSchema.create({
             data: {
-              walletid: "0000000000000000",
-              walletkey: privateKey,
-              timestamp: timestamp,
-              ref: "genesis",
-              hash: "genesis block",
-              body: _body,
-              amount: 0,
-              signatue: "Invalid signature",
+              walletid: genisis,
               owner: {
                 create: {
+                  UserSchemakey: genisis,
                   key: publicKey,
                   firstname: "Haxrei",
                   lastname: "Genesis",
@@ -41,9 +35,15 @@ class BlockChain {
                   contact: "+8801611774234",
                   password: "null",
                   status: "active",
-                  UserSchemakey: "0000000000000000",
                 },
               },
+              walletkey: privateKey,
+              timestamp: timestamp,
+              ref: "genesis",
+              hash: "genesis block",
+              amount: 0,
+              body: _body,
+              signatue: "Invalid signature",
             },
           })
           await prisma.$disconnect()
@@ -163,15 +163,9 @@ class BlockChain {
           Block = await prisma.hiveSchema.create({
             data: {
               walletid: walletid,
-              walletkey: privateKey,
-              timestamp: timestamp,
-              ref: refBlock,
-              hash: _Hash,
-              body: _body,
-              amount: 0,
-              signatue: undefined,
               owner: {
                 create: {
+                  UserSchemakey: walletid,
                   key: publicKey,
                   firstname: _firstname,
                   lastname: _lastname,
@@ -179,10 +173,16 @@ class BlockChain {
                   contact: _contact,
                   password: password,
                   plane_passwd: _password,
-                  status: "A",
-                  UserSchemakey: walletid,
+                  status: "active",
                 },
               },
+              walletkey: privateKey,
+              timestamp: timestamp,
+              ref: refBlock,
+              hash: _Hash,
+              body: _body,
+              amount: 0,
+              signatue: undefined,
             },
           })
           await prisma.$disconnect()

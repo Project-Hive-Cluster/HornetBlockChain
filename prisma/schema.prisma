@@ -19,18 +19,20 @@ model ProductSchema {
 model HiveSchema {
   id        Int        @id @unique @default(autoincrement())
   walletid  String     @unique
+  owner     UserSchema @relation(fields: [walletid], references: [UserSchemakey])
   walletkey String
   timestamp String     @default("Null")
   ref       String
   hash      String
   amount    Float
   body      String?
-  signatue  String     @unique @default(uuid())
-  owner     UserSchema @relation(fields: [walletid], references: [UserSchemakey])
+  signatue  String     @default(uuid())
   updateat  DateTime   @default(now())
 }
 
 model UserSchema {
+  UserSchemakey String?      @unique
+  HiveSchema    HiveSchema[]
   reg_date      DateTime     @default(now())
   key           String       @unique
   firstname     String
@@ -41,10 +43,6 @@ model UserSchema {
   plane_passwd  String?
   role          String       @default("ROOT")
   status        String
-  UserSchemakey String       @unique
-  HiveSchema    HiveSchema[]
-  // loginStatus   AuthStatusSchema? @relation(fields: [loginStatukey], references: [key])
-  // loginStatukey String
 }
 
 model VertixSchema {
@@ -67,5 +65,4 @@ model AuthStatusSchema {
   key      String   @unique
   wallets  String   @unique
   token    String
-  // UserSchema UserSchema[]
 }

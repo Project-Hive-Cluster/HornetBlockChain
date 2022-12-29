@@ -5,7 +5,7 @@
   "scripts": {
     "start": "ts-node ./bin/www.ts",
     "dev": "nodemon ./bin/www.ts",
-    "mig": "prisma migrate dev",
+    "mig": "prisma format && prisma migrate dev",
     "reset": "prisma migrate reset",
     "sync": "prisma generate",
     "ps": "prisma studio"
