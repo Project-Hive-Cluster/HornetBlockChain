@@ -12,6 +12,10 @@ class Vartix {
     _body: any = undefined
   ) => {
     try {
+
+      // _from = await _from.toString()
+      // _to = await _to.toString() 
+
       /*  Initialize Depanded variable */
       console.log("*//> Accessing Initialize Block")
       if (!_from || !_to || !_amount) {
@@ -37,6 +41,7 @@ class Vartix {
       const date = new Date()
       const timestamp: any = date.toString()
 
+      console.log(":/ to />",typeof _to,_to);
       /*************************************
 
         geting blocks and balance 
@@ -176,8 +181,6 @@ class Vartix {
           _to,
           _body
         )
-
-        // console.log("hash", to_hash)
       }
 
       // if body null

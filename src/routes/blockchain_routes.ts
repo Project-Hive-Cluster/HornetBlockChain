@@ -1,7 +1,7 @@
 import express from "express"
 const router = express.Router()
 import BlockChain from "../Apps/Blockchain"
-import { dataGen } from "../Apps/FakeData"
+import { dataGen,faketr } from "../Apps/FakeData"
 const blockChain = new BlockChain()
 
 /* GET users listing. */
@@ -32,6 +32,15 @@ router.post("/create", async (req, res) => {
 router.post("/fillup", async (req, res) => {
   try {
     const output = await dataGen(req.body.number)
+    res.send(JSON.stringify(output))
+  } catch (err) {
+    res.send(404)
+  }
+})
+router.post("/faketr", async (req, res) => {
+  try {
+    const{number,amount,load} = req.body
+    const output = await faketr(number,amount,load)
     res.send(JSON.stringify(output))
   } catch (err) {
     res.send(404)

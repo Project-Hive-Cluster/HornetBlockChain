@@ -1,5 +1,5 @@
 import express, { application } from "express"
-
+import * as jwt from 'jsonwebtoken'
 import cookieParser from "cookie-parser"
 import logger from "morgan"
 import cors from "cors"
@@ -11,6 +11,9 @@ const blockChainRouter = require("./src/routes/blockchain_routes")
 const walletRouter = require("./src/routes/wallet_routes")
 
 require("dotenv").config()
+const secret = 'mysecret';  // A secret key for signing the JWT
+const refreshSecret = 'myrefreshsecret'; 
+ 
 // Optations
 const corsOptions = {
   origin: "*",
@@ -24,7 +27,10 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 
+
+
 // Routes
+
 app.use("/", authRouter)
 app.use("/blockchain", blockChainRouter)
 app.use("/vartix", vartixRouter)
@@ -33,5 +39,6 @@ app.use("/vartix", vartixRouter)
 app.get("/*", (res: any) => {
   res.status(404).json({ Error: "Invalid Address" })
 })
+
 
 export default app

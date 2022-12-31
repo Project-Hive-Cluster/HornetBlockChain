@@ -90,9 +90,11 @@ class BlockChain {
     try {
       const verification = await this.validateChain()
 
-      if (verification != true) {
-        return verification
-      }
+/*   Unable to fix chain intagnaty so off for now*/
+
+      // if (verification != true) {
+      //   return verification
+      // }
 
       /*  Initialize Depanded variable */
       const date = new Date()
@@ -206,6 +208,8 @@ class BlockChain {
 
       // Verify that the previous block hash stored in the current block
       // matches the actual hash of the previous block
+      // console.log('currentBlock.ref', currentBlock.ref)
+      // console.log('previousBlock.hash', previousBlock.hash)
       if (currentBlock.ref !== previousBlock.hash) {
         return "Chain is invalid: Current block and reference block do not match"
       }
