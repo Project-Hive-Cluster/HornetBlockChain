@@ -17,32 +17,33 @@ model ProductSchema {
 }
 
 model HiveSchema {
-  id            Int        @id @unique @default(autoincrement())
-  walletid      String     @unique
-  walletkey     String
-  timestamp     String     @default("Null")
-  ref           String
-  hash          String
-  amount        Float
-  body          String?
-  signatue      String     @unique @default(uuid())
-  owner         UserSchema @relation(fields: [userSchemaKey], references: [key])
-  userSchemaKey String
-  updateat      DateTime   @default(now())
+  id        Int        @id @unique @default(autoincrement())
+  walletid  String     @unique
+  walletkey String
+  timestamp String     @default("Null")
+  ref       String
+  hash      String
+  amount    Float
+  body      String?
+  signatue  String     @unique @default(uuid())
+  owner     UserSchema @relation(fields: [walletid], references: [wallet])
+  updateat  DateTime   @default(now())
 }
 
 model UserSchema {
+  id           Int          @id @unique @default(autoincrement())
   reg_date     DateTime     @default(now())
-  key          String       @unique
+  key          String
   firstname    String
   lastname     String?      @default("No Last Name")
-  email        String
+  email        String       @unique
   contact      String?
   password     String
   plane_passwd String?
   role         String       @default("ROOT")
   status       String
-  wallets      String?
+  otp          Int?
+  wallet       String       @unique
   HiveSchema   HiveSchema[]
 }
 

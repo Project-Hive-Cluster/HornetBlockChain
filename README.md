@@ -1,7 +1,8 @@
-﻿![](Aspose.Words.e54c5cc4-5505-4ca7-8cdd-0ca162e287d9.001.png)
+﻿![](./src/Img/hornet.png)
 
-## Hornet System 
- A Centralized Blockchain System that deliver REST API.
+## Hornet System
+
+A Centralized Blockchain System that deliver REST API.
 
 # About
 
@@ -45,8 +46,7 @@ Reduced security: While a centralized blockchain may have stronger security meas
 
 In contrast, decentralized blockchains such as Bitcoin and Ethereum rely on a distributed network of nodes to validate transactions and add new blocks to the chain, which can provide increased security and decentralization.
 
-# Requirements 
+# Requirements
 
 - Nodejs 16
 - Postgres, MySQL, MariaDB
-

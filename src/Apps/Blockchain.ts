@@ -11,8 +11,8 @@ class BlockChain {
 
     try {
       const [publicKey, privateKey] = await this.generateKeyPair()
-      // console.log("====privateKey=> ", privateKey)
-      // console.log("====publicKey=> ", publicKey)
+      const _password = crypto.createHash("sha256").update("hornet").digest("hex")
+   
 
       let genesisBlock: object = {}
       const _body = JSON.stringify({
@@ -24,7 +24,7 @@ class BlockChain {
         if (privateKey || privateKey) {
           genesisBlock = await prisma.hiveSchema.create({
             data: {
-              walletid: "0000000000000000",
+         
               walletkey: privateKey,
               timestamp: timestamp,
               ref: "genesis",
@@ -39,9 +39,9 @@ class BlockChain {
                   lastname: "Genesis",
                   email: "hivecluster@haxrei.com",
                   contact: "+8801611774234",
-                  password: "null",
+                  password: _password,
                   status: "active",
-                  wallets: "0000000000000000",
+                  wallet: "0000000000000000",
                 },
               },
             },
@@ -162,7 +162,6 @@ class BlockChain {
         if (privateKey || privateKey) {
           Block = await prisma.hiveSchema.create({
             data: {
-              walletid: walletid,
               walletkey: privateKey,
               timestamp: timestamp,
               ref: refBlock,
@@ -180,7 +179,7 @@ class BlockChain {
                   password: password,
                   plane_passwd: _password,
                   status: "A",
-                  wallets: walletid,
+                  wallet: walletid,
                 },
               },
             },

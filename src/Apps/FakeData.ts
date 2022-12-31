@@ -14,7 +14,7 @@ export const dataGen = async (count: number) => {
         _firstname: faker.name.firstName(),
         _lastname: faker.name.lastName(),
         _email: faker.internet.email(),
-        _contact: faker.phone.number(),
+        _contact:faker.phone.phoneNumber('#### ######'),
         _password: faker.internet.password(),
         _body: JSON.stringify({
           DOB: faker.date.birthdate(),
