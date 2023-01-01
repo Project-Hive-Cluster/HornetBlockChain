@@ -12,9 +12,8 @@ class Vartix {
     _body: any = undefined
   ) => {
     try {
-
       // _from = await _from.toString()
-      // _to = await _to.toString() 
+      // _to = await _to.toString()
 
       /*  Initialize Depanded variable */
       console.log("*//> Accessing Initialize Block")
@@ -41,7 +40,7 @@ class Vartix {
       const date = new Date()
       const timestamp: any = date.toString()
 
-      console.log(":/ to />",typeof _to,_to);
+      console.log(":/ to />", typeof _to, _to)
       /*************************************
 
         geting blocks and balance 
@@ -280,6 +279,52 @@ class Vartix {
       console.error("Creat Hash Function error: " + err)
     }
   }
+
+  async look(walletid: any) {
+    try {
+      const data = await prisma.vertixSchema.findMany({
+        select: {
+          transaction_no: true,
+          edge_in: true,
+          edge_out: true,
+          debit: true,
+          credit: true,
+          timestamp: true,
+          body: true,
+        },
+        where: { walletid: walletid },
+        orderBy: { timestamp: "asc" },
+      })
+
+      return data
+    } catch (error) {
+      return "Error looking for vartex transaction. Massage:" + error
+    }
+  }
+
+  // async WalletData(walletid: any, fromdate: any, todate: any) {
+  //   try {
+  //     const fmonth = fromdate.getMonth()
+  //     const fday = fromdate.getDate()
+  //     const fyear = fromdate.getFullYear()
+  //     const tmonth = todate.getMonth()
+  //     const tday = todate.getDate()
+  //     const tyear = todate.getFullYear()
+
+  //     const data = await prisma.vertixSchema.findMany({
+  //       where: {
+  //         walletid: walletid,
+  //         timestamp: {
+  //           gt: new Date(fyear, fmonth, fday),
+  //           lt: new Date(tyear, tmonth, tday),
+  //         },
+  //       },
+  //     })
+  //     return data
+  //   } catch (error) {
+  //     return "Error"
+  //   }
+  // }
 
   mktrno = () => {
     return Date.now() + crypto.randomInt(7)

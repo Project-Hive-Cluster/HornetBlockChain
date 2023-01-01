@@ -28,11 +28,21 @@ router.post("/create", async (req, res) => {
     res.send(err)
   }
 })
+router.post("/look", async (req, res) => {
+  try {
+    let { walletid } = req.body
+    const output = await vartix.look(walletid)
+    res.send(output)
+  } catch (err) {
+    console.log("Ërror://", err)
+    res.send(err)
+  }
+})
 
 router.post("/balance", async (req, res) => {
   try {
     const output = await vartix.balance(req.body.walletid)
-    res.send("Balance:" + output)
+    res.send({ Balance: output })
   } catch (err) {
     console.log("Ërror://", err)
     res.send(err)
@@ -48,15 +58,5 @@ router.post("/statment", async (req, res) => {
     res.send(err)
   }
 })
-
-// router.get("/faketr", async (req, res) => {
-//   try {
-//     const output = await faketr()
-//     res.send({ data: output })
-//   } catch (err) {
-//     console.log("Ërror://", err)
-//     res.send(err)
-//   }
-// })
 
 module.exports = router

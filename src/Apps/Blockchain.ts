@@ -11,8 +11,10 @@ class BlockChain {
 
     try {
       const [publicKey, privateKey] = await this.generateKeyPair()
-      const _password = crypto.createHash("sha256").update("hornet").digest("hex")
-   
+      const _password = crypto
+        .createHash("sha256")
+        .update("hornet")
+        .digest("hex")
 
       let genesisBlock: object = {}
       const _body = JSON.stringify({
@@ -24,7 +26,6 @@ class BlockChain {
         if (privateKey || privateKey) {
           genesisBlock = await prisma.hiveSchema.create({
             data: {
-         
               walletkey: privateKey,
               timestamp: timestamp,
               ref: "genesis",
@@ -90,7 +91,7 @@ class BlockChain {
     try {
       const verification = await this.validateChain()
 
-/*   Unable to fix chain intagnaty so off for now*/
+      /*   Unable to fix chain intagnaty so off for now*/
 
       // if (verification != true) {
       //   return verification
@@ -275,6 +276,24 @@ class BlockChain {
       hash.write(_hashData)
       hash.end()
     })
+  }
+  async hiveData() {
+    const tempData = await prisma.hiveSchema.findMany({
+      select: {
+        id: true,
+        walletid: true,
+        timestamp: true,
+        amount: true,
+        body: true,
+        owner: true,
+        signatue: true,
+      },
+      orderBy: {
+        id: "desc",
+      },
+    })
+    await prisma.$disconnect
+    return tempData
   }
 }
 
