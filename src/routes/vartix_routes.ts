@@ -1,6 +1,7 @@
 import express from "express"
 const router = express.Router()
 import Vartix from "../Apps/Vartix"
+import moment from "moment"
 const vartix = new Vartix()
 // import { dataGen } from "../Apps/FakeData"
 
@@ -9,6 +10,7 @@ router.post("/load", async (req, res) => {
     let { walletid, amount, body } = req.body
     body = JSON.stringify(body)
     const from = "0000000000000000"
+    console.log(req)
     const output = await vartix.make(from, walletid, amount, body)
     res.send("Massage:" + output)
   } catch (err) {
@@ -49,12 +51,28 @@ router.post("/balance", async (req, res) => {
   }
 })
 
+router.post("/statment_period", async (req, res) => {
+  try {
+    const { from, to, walletid } = req.body
+    console.log(req.body)
+    const fromDate = moment(from).format("DD-MM-YYYY").toString()
+    const toDate = moment(to).format("DD-MM-YYYY").toString()
+    console.log(fromDate, toDate)
+
+    const output = await vartix.statment_period(walletid, fromDate, toDate)
+    console.log(output)
+    res.send({ data: output })
+  } catch (err) {
+    console.log("Ërror://statment_period/", err)
+    res.send(err)
+  }
+})
 router.post("/statment", async (req, res) => {
   try {
     const output = await vartix.statment(req.body.walletid)
     res.send({ data: output })
   } catch (err) {
-    console.log("Ërror://", err)
+    console.log("Ërror://statment/ ", err)
     res.send(err)
   }
 })

@@ -82,6 +82,20 @@ class Wallet {
     })
     return { success: true }
   }
+  async find_user_info(walletid: string) {
+    const userdata: any = await prisma.userSchema.findMany({
+      select: {
+        firstname: true,
+        lastname: true,
+        contact: true,
+        otp: true,
+        role: true,
+        email: true,
+      },
+      where: { wallet: walletid },
+    })
+    return userdata
+  }
 }
 
 export default Wallet

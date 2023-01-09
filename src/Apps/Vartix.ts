@@ -366,7 +366,35 @@ class Vartix {
           walletid: "desc",
         },
       })
-      console.log("Statment Data", block)
+      return block
+    } catch (err) {
+      console.log("Error while geting lash hash", err)
+      return "Error Last Hash " + err
+    }
+  }
+  statment_period = async (walletid: string, from: string, to: string) => {
+    try {
+      let block: any = await prisma.vertixSchema.findMany({
+        select: {
+          timestamp: true,
+          debit: true,
+          credit: true,
+          transaction_no: true,
+          edge_out: true,
+          body: true,
+        },
+        where: {
+          walletid: walletid,
+          timestamp: {
+            gte: from,
+            lte: to,
+          },
+        },
+        orderBy: {
+          walletid: "desc",
+        },
+      })
+      console.log(block)
       return block
     } catch (err) {
       console.log("Error while geting lash hash", err)
