@@ -36,6 +36,14 @@ router.get("/hiveData", async (req, res) => {
     res.send(404)
   }
 })
+router.get("/hiveData", async (req, res) => {
+  try {
+    const output = await blockChain.hiveData()
+    res.send(JSON.stringify(output))
+  } catch (err) {
+    res.send(404)
+  }
+})
 router.post("/fillup", async (req, res) => {
   try {
     const output = await dataGen(req.body.number)

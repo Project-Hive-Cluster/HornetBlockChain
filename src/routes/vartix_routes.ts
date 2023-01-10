@@ -21,6 +21,7 @@ router.post("/load", async (req, res) => {
 
 router.post("/create", async (req, res) => {
   try {
+    console.log(req.body)
     let { from, to, amount, body } = req.body
     body = JSON.stringify(body)
     const output = await vartix.make(from, to, amount, body)
