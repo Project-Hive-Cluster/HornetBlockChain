@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
 import crypto from "crypto"
+import { SourceMap } from "module"
 
 class Vartix {
   constructor() {}
@@ -12,9 +13,6 @@ class Vartix {
     _body: any = undefined
   ) => {
     try {
-      // _from = await _from.toString()
-      // _to = await _to.toString()
-
       /*  Initialize Depanded variable */
       console.log("*//> Accessing Initialize Block")
       if (!_from || !_to || !_amount) {
@@ -25,22 +23,27 @@ class Vartix {
       }
 
       /* Veriables */
+
       // **To
       let to_temp_block: any = undefined
       const inNode: any = await this.lastHash(_to)
       let to_balance: number = 0
       let to_hash: string
+
       // ** From
       let from_temp_block: any = undefined
       let from_balance: number = 0
       const outNode: any = await this.lastHash(_from)
       let from_hash: string
+
       // ** mics
+      let tr_amount: number = 0
       const trno = await this.mktrno()
       const date = new Date()
       const timestamp: any = date.toString()
 
       console.log(":/ to />", typeof _to, _to)
+
       /*************************************
 
         geting blocks and balance 
@@ -79,6 +82,7 @@ class Vartix {
 
         if (!from_temp_block) {
           console.log("from_temp_block is found null")
+
           from_temp_block = await prisma.hiveSchema.findFirst({
             where: {
               walletid: _from,
@@ -88,15 +92,21 @@ class Vartix {
       } catch (e) {
         return "Error getting schema data" + e
       }
+
       /* 
+
       -----------------------------------------
                   Getting Balance
       -----------------------------------------
+
       */
       console.log("*//> Accessing Balance Block")
+
       try {
         to_balance = await this.balance(_to)
+
         from_balance = await this.balance(_from)
+
         console.log("to_balance", to_balance)
         console.log("from_balance", from_balance)
       } catch (e) {
@@ -108,20 +118,27 @@ class Vartix {
                   Balance check 
       -----------------------------------------
       */
+
       console.log("*//> Accessing Balance Check Block")
+
+      tr_amount = parseInt(_amount.toString())
+
       if (_from != "0000000000000000") {
         if (from_balance <= 0)
           return "Insufficient Balance. Balance:" + from_balance
-        if (from_balance - _amount == 0)
+
+        if (from_balance - tr_amount == 0)
           return "Insufficient Balance. Balance:" + from_balance
       } else {
         console.log("Msg://> Balance Check Ignored")
       }
 
       /* 
+
       -----------------------------------------
                   Hashing 
       -----------------------------------------
+
       */
       console.log("*//> Accessing Hash relocated Block")
 
@@ -191,7 +208,9 @@ class Vartix {
                   block data 
       ----------------------------------------- 
       */
+
       console.log("*//> Accessing Hash Data.")
+
       const _data = [
         {
           walletid: _from,
@@ -202,7 +221,7 @@ class Vartix {
           edge_in: _to.toString(),
           edge_out: _from.toString(),
           hash: from_hash,
-          debit: _amount,
+          debit: tr_amount,
           credit: 0,
           body: _body,
         },
@@ -216,7 +235,7 @@ class Vartix {
           edge_out: _to.toString(),
           hash: to_hash,
           debit: 0,
-          credit: _amount,
+          credit: tr_amount,
           body: _body,
         },
       ]
@@ -224,28 +243,39 @@ class Vartix {
       try {
         try {
           console.log("*//> Updateing Vartix Data.")
+
           await prisma.vertixSchema.createMany({
             data: _data,
           })
         } catch (e) {
           console.log("Error//: error while updating vartix" + e)
         }
+
         try {
           console.log("*//> Updateing Hive Data for sender.")
+
           const hive_to_block = await prisma.hiveSchema.findFirst({
             where: { walletid: _to },
           })
 
-          const to_temp_amount = hive_to_block?.amount
-            ? hive_to_block.amount + _amount
-            : _amount
+          let hive_to_block_amount: number | undefined = 0
+          hive_to_block_amount = hive_to_block?.amount
+
+          if (hive_to_block_amount === undefined) {
+            hive_to_block_amount = 0
+          }
+
+          const to_temp_amount = hive_to_block_amount + tr_amount
+
+          console.log("??>>:", to_temp_amount)
 
           await prisma.hiveSchema.updateMany({
             where: { walletid: _to },
             data: { amount: { set: to_temp_amount } },
           })
+
           await prisma.hiveSchema.updateMany({
-            where: { walletid: _to },
+            where: { walletid: _from },
             data: { amount: { set: to_temp_amount } },
           })
         } catch (e) {
@@ -254,17 +284,20 @@ class Vartix {
 
         try {
           console.log("*//> Updateing Hive Data for reciver.")
+
           const hive_from_block = await prisma.hiveSchema.findFirst({
             where: { walletid: _to },
           })
 
-          const from_temp_amount = hive_from_block?.amount
-            ? hive_from_block.amount - _amount
-            : _amount
+          let hive_from_temp_amount: number | undefined = 0
+          hive_from_temp_amount = hive_from_block?.amount
+          if (hive_from_temp_amount === undefined) {
+            hive_from_temp_amount = 0
+          }
 
           await prisma.hiveSchema.updateMany({
             where: { walletid: _from },
-            data: { amount: { set: from_temp_amount } },
+            data: { amount: { set: hive_from_temp_amount } },
           })
         } catch (e) {
           console.log("Error//: error while updating hive for reciver" + e)
