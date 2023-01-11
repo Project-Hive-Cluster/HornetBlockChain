@@ -1,14 +1,14 @@
 {
-  "name": "rest-express",
-  "version": "1.0.0",
+  "name": "hornetblockchain",
+  "version": "1.1.0",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node ./bin/www.ts",
     "dev": "nodemon ./bin/www.ts",
     "mig": "prisma migrate dev && prisma generate",
     "reset": "prisma migrate reset",
     "sync": "prisma format && prisma generate",
-    "ps": "prisma studio "
+    "ps": "prisma studio ",
+    "start": "ts-node ./bin/www.ts && mig"
   },
   "dependencies": {
     "@prisma/client": "^4.8.0",
