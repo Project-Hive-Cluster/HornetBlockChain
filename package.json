@@ -2,6 +2,8 @@
   "name": "hornetblockchain",
   "version": "1.1.0",
   "license": "MIT",
+  "author":"Tanbin Hassan Bappi",
+  "git":"https://github.com/smtanbin/HornetBlockChain",
   "scripts": {
     "dev": "nodemon ./bin/www.ts",
     "mig": "prisma migrate dev && prisma generate",
