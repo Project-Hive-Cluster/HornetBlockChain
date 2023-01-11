@@ -5,11 +5,10 @@
   "scripts": {
     "dev": "nodemon ./bin/www.ts",
     "mig": "prisma migrate dev && prisma generate",
-    "production": "prisma migrate up --experimental",
     "reset": "prisma migrate reset",
     "sync": "prisma format && prisma generate",
     "ps": "prisma studio ",
-    "start": "ts-node ./bin/www.ts && production"
+    "start": "ts-node ./bin/www.ts && mig"
   },
   "dependencies": {
     "@prisma/client": "^4.8.0",
