@@ -8,13 +8,12 @@ import app from "../main"
 import http from "http"
 import debug from "debug"
 
-
 /**
  * Normalize a port into a number, string, or false.
  */
 
-const normalizePort = (val:any) => {
-  const port:number = parseInt(val, 10)
+const normalizePort = (val: any) => {
+  const port: number = parseInt(val, 10)
 
   if (isNaN(port)) {
     // named pipe
@@ -28,7 +27,6 @@ const normalizePort = (val:any) => {
 
   return false
 }
-
 
 /**
  * Get port from environment and store in Express.
@@ -44,12 +42,11 @@ app.set("port", port)
 
 const server = http.createServer(app)
 
-
 /**
  * Event listener for HTTP server "error" event.
  */
 
-const onError = (error:any) => {
+const onError = (error: any) => {
   if (error.syscall !== "listen") {
     throw error
   }
@@ -70,7 +67,6 @@ const onError = (error:any) => {
   }
 }
 
-
 /**
  * Event listener for HTTP server "listening" event.
  */
@@ -80,7 +76,6 @@ const onListening = () => {
   const bind = typeof addr === "string" ? "pipe " + addr : "port "
   debug("Listening on " + bind)
 }
-
 
 /**
  * Listen on provided port, on all network interfaces.
